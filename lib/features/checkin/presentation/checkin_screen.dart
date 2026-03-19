@@ -345,7 +345,7 @@ class _StepOneContent extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Mode prototype: superposition visuelle statique (contour visage, yeux, bouche).',
+                          'Mode prototype: tracking facial dynamique simule en temps reel (contour visage, yeux, bouche).',
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
                       ),
@@ -385,7 +385,7 @@ class _StepOneContent extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
-            'Aucune image n\'est sauvegardée. Seulement des métriques numériques.',
+            'Aucune image n\'est sauvegardée. Traitement local uniquement.',
             style: Theme.of(context).textTheme.bodyLarge,
           ),
         ),
