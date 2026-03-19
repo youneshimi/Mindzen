@@ -93,7 +93,14 @@ class MindZenScaffold extends StatelessWidget {
 
         return Scaffold(
           backgroundColor: AppColors.background,
-          body: SafeArea(child: child),
+          body: SafeArea(
+            child: Column(
+              children: [
+                _MobileTopBar(location: location, view: _view),
+                Expanded(child: child),
+              ],
+            ),
+          ),
           bottomNavigationBar: _isEmployeeLocation
               ? NavigationBar(
                   selectedIndex: employeeDestinations.indexWhere(
@@ -114,6 +121,123 @@ class MindZenScaffold extends StatelessWidget {
               : null,
         );
       },
+    );
+  }
+}
+
+class _MobileTopBar extends StatelessWidget {
+  const _MobileTopBar({required this.location, required this.view});
+
+  final String location;
+  final DashboardView view;
+
+  String get _sectionLabel {
+    switch (location) {
+      case '/checkin':
+        return 'Check-in';
+      case '/results':
+        return 'Résultats';
+      case '/history':
+        return 'Historique';
+      case '/settings':
+        return 'Paramètres';
+      case '/doctor':
+        return 'Vue Médecin';
+      case '/hr':
+        return 'Vue DRH';
+      case '/home':
+      default:
+        return 'Accueil';
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(16, 14, 16, 10),
+      decoration: const BoxDecoration(
+        color: AppColors.cards,
+        border: Border(bottom: BorderSide(color: AppColors.border)),
+      ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'MindZen',
+                  style: GoogleFonts.dmSerifDisplay(
+                    fontSize: 26,
+                    fontStyle: FontStyle.italic,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  _sectionLabel,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ],
+            ),
+          ),
+          PopupMenuButton<DashboardView>(
+            tooltip: 'Changer de vue',
+            position: PopupMenuPosition.under,
+            onSelected: (newValue) {
+              switch (newValue) {
+                case DashboardView.employe:
+                  context.go('/home');
+                case DashboardView.medecin:
+                  context.go('/doctor');
+                case DashboardView.drh:
+                  context.go('/hr');
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: DashboardView.employe,
+                child: Text('Employé'),
+              ),
+              PopupMenuItem(
+                value: DashboardView.medecin,
+                child: Text('Médecin'),
+              ),
+              PopupMenuItem(value: DashboardView.drh, child: Text('DRH')),
+            ],
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              decoration: BoxDecoration(
+                color: AppColors.violetLight,
+                borderRadius: BorderRadius.circular(999),
+                border: Border.all(color: AppColors.border),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    switch (view) {
+                      DashboardView.employe => 'Employé',
+                      DashboardView.medecin => 'Médecin',
+                      DashboardView.drh => 'DRH',
+                    },
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.violet,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.expand_more,
+                    size: 18,
+                    color: AppColors.violet,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

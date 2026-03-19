@@ -207,7 +207,7 @@ class _ScoreCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Mois precedent: $previousScore/100',
+                  'Mois précédent: $previousScore/100',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ],
