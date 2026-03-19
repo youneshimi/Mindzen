@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/auth/presentation/login_screen.dart';
 import '../features/checkin/presentation/checkin_screen.dart';
 import '../features/doctor/presentation/doctor_dashboard_screen.dart';
 import '../features/history/presentation/history_screen.dart';
@@ -12,8 +13,9 @@ import '../features/shared/presentation/mindzen_scaffold.dart';
 
 final appRouterProvider = Provider<GoRouter>(
   (ref) => GoRouter(
-    initialLocation: '/home',
+    initialLocation: '/login',
     routes: [
+      GoRoute(path: '/login', builder: (context, state) => const LoginScreen()),
       GoRoute(
         path: '/home',
         builder: (context, state) => MindZenScaffold(

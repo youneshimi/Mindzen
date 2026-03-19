@@ -14,7 +14,10 @@ class DoctorDashboardScreen extends StatelessWidget {
     final zoneVert = mockMedecin['zone_vert'] as int;
     final zoneOrange = mockMedecin['zone_orange'] as int;
     final zoneRouge = mockMedecin['zone_rouge'] as int;
-    final alertes = (mockMedecin['alertes'] as List<dynamic>).cast<String>();
+    final alertes = (mockMedecin['alertes'] as List<dynamic>)
+        .cast<String>()
+        .map((message) => message.replaceAll('⚠️ ', '').replaceAll('📈 ', ''))
+        .toList();
     final equipes = (mockMedecin['equipes'] as List<dynamic>)
         .cast<Map<String, dynamic>>();
 
@@ -39,25 +42,28 @@ class DoctorDashboardScreen extends StatelessWidget {
                   runSpacing: 12,
                   children: [
                     _StatPill(
-                      icon: '✅',
+                      icon: Icons.check_circle,
                       label: '$zoneVert stables',
                       background: AppColors.stableGreenLight,
                       textColor: const Color(0xFF085041),
                       borderColor: AppColors.stableGreen,
+                      iconColor: const Color(0xFF085041),
                     ),
                     _StatPill(
-                      icon: '⚠️',
+                      icon: Icons.warning_amber_rounded,
                       label: '$zoneOrange à risque',
                       background: AppColors.riskOrangeLight,
                       textColor: const Color(0xFF633806),
                       borderColor: AppColors.riskOrange,
+                      iconColor: const Color(0xFF633806),
                     ),
                     _StatPill(
-                      icon: '🔴',
+                      icon: Icons.error,
                       label: '$zoneRouge critiques',
                       background: AppColors.criticalRedLight,
                       textColor: const Color(0xFF712B13),
                       borderColor: AppColors.criticalRed,
+                      iconColor: const Color(0xFF712B13),
                     ),
                   ],
                 ),
@@ -72,7 +78,7 @@ class DoctorDashboardScreen extends StatelessWidget {
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 12),
-                    const SizedBox(height: 280, child: _DoctorDonutChart()),
+                    const _DoctorDonutChart(),
                   ],
                 ),
               ).animate(delay: 220.ms).fadeIn().slideY(begin: 0.07, end: 0),
@@ -82,7 +88,7 @@ class DoctorDashboardScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      '⚠️ Alertes ce mois',
+                      'Alertes ce mois',
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 12),
@@ -115,7 +121,7 @@ class DoctorDashboardScreen extends StatelessWidget {
                     _TeamsTable(equipes: equipes),
                     const SizedBox(height: 12),
                     Text(
-                      '⚠️ JAMAIS de noms individuels',
+                      'Aucune donnée nominative',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
@@ -123,7 +129,7 @@ class DoctorDashboardScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 4),
                     Text(
-                      '⚠️ Uniquement par équipe',
+                      'Analyse uniquement par équipe',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                         color: AppColors.textPrimary,
@@ -181,13 +187,15 @@ class _StatPill extends StatelessWidget {
     required this.background,
     required this.textColor,
     required this.borderColor,
+    required this.iconColor,
   });
 
-  final String icon;
+  final IconData icon;
   final String label;
   final Color background;
   final Color textColor;
   final Color borderColor;
+  final Color iconColor;
 
   @override
   Widget build(BuildContext context) {
@@ -201,7 +209,7 @@ class _StatPill extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(icon),
+          Icon(icon, size: 18, color: iconColor),
           const SizedBox(width: 8),
           Text(
             label,
@@ -228,9 +236,10 @@ class _DoctorDonutChart extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final compact = constraints.maxWidth < 760;
+        final chartSize = compact ? 190.0 : 220.0;
         final chart = SizedBox(
-          width: 220,
-          height: 220,
+          width: chartSize,
+          height: chartSize,
           child: PieChart(
             PieChartData(
               centerSpaceRadius: 58,
@@ -421,7 +430,7 @@ class _TeamsTable extends StatelessWidget {
                     border: Border.all(color: style.border),
                   ),
                   child: Text(
-                    '${style.icon}${style.label}',
+                    style.label,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: style.text,
                       fontWeight: FontWeight.w600,
@@ -457,6 +466,7 @@ class _ZoneStyle {
     required this.border,
   });
 
+  // Kept for hot-reload compatibility with previous class shape.
   final String icon;
   final String label;
   final Color background;
@@ -468,7 +478,7 @@ _ZoneStyle _zoneStyle(String zone) {
   switch (zone) {
     case 'vert':
       return const _ZoneStyle(
-        icon: '🟢',
+        icon: '',
         label: 'vert',
         background: AppColors.stableGreenLight,
         text: Color(0xFF085041),
@@ -476,7 +486,7 @@ _ZoneStyle _zoneStyle(String zone) {
       );
     case 'rouge':
       return const _ZoneStyle(
-        icon: '🔴',
+        icon: '',
         label: 'rouge',
         background: AppColors.criticalRedLight,
         text: Color(0xFF712B13),
@@ -485,7 +495,7 @@ _ZoneStyle _zoneStyle(String zone) {
     case 'orange':
     default:
       return const _ZoneStyle(
-        icon: '🟡',
+        icon: '',
         label: 'orange',
         background: AppColors.riskOrangeLight,
         text: Color(0xFF633806),

@@ -8,6 +8,14 @@ void main() {
     await tester.pumpWidget(const ProviderScope(child: MindZenApp()));
     await tester.pumpAndSettle();
 
+    // Login page should be shown first
+    expect(find.textContaining('Sélectionnez votre rôle'), findsOneWidget);
+
+    // Tap on Employé button
+    await tester.tap(find.textContaining('Employé'));
+    await tester.pumpAndSettle();
+
+    // Home page should now be visible
     expect(find.textContaining('Bonjour Sarah'), findsOneWidget);
     expect(find.textContaining('Mon Moment MindZen'), findsOneWidget);
   });

@@ -181,58 +181,35 @@ class _MobileTopBar extends StatelessWidget {
               ],
             ),
           ),
-          PopupMenuButton<DashboardView>(
-            tooltip: 'Changer de vue',
-            position: PopupMenuPosition.under,
-            onSelected: (newValue) {
-              switch (newValue) {
-                case DashboardView.employe:
-                  context.go('/home');
-                case DashboardView.medecin:
-                  context.go('/doctor');
-                case DashboardView.drh:
-                  context.go('/hr');
-              }
-            },
-            itemBuilder: (context) => const [
-              PopupMenuItem(
-                value: DashboardView.employe,
-                child: Text('Employé'),
-              ),
-              PopupMenuItem(
-                value: DashboardView.medecin,
-                child: Text('Médecin'),
-              ),
-              PopupMenuItem(value: DashboardView.drh, child: Text('DRH')),
-            ],
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: AppColors.violetLight,
-                borderRadius: BorderRadius.circular(999),
-                border: Border.all(color: AppColors.border),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    switch (view) {
-                      DashboardView.employe => 'Employé',
-                      DashboardView.medecin => 'Médecin',
-                      DashboardView.drh => 'DRH',
-                    },
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AppColors.violet,
-                      fontWeight: FontWeight.w600,
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => context.go('/login'),
+              borderRadius: BorderRadius.circular(999),
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.violetLight,
+                  borderRadius: BorderRadius.circular(999),
+                  border: Border.all(color: AppColors.border),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.logout, size: 18, color: AppColors.violet),
+                    const SizedBox(width: 6),
+                    Text(
+                      'Changer rôle',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.violet,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 4),
-                  const Icon(
-                    Icons.expand_more,
-                    size: 18,
-                    color: AppColors.violet,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -297,43 +274,33 @@ class _Sidebar extends StatelessWidget {
           const SizedBox(height: 18),
           const Divider(),
           const SizedBox(height: 10),
-          Text(
-            'Switcher de vue',
-            style: Theme.of(
-              context,
-            ).textTheme.bodyMedium?.copyWith(color: AppColors.textSecondary),
-          ),
-          const SizedBox(height: 8),
-          DropdownButtonHideUnderline(
-            child: DropdownButton<DashboardView>(
-              isExpanded: true,
-              value: view,
-              borderRadius: BorderRadius.circular(12),
-              style: Theme.of(context).textTheme.bodyLarge,
-              items: const [
-                DropdownMenuItem(
-                  value: DashboardView.employe,
-                  child: Text('Employé'),
+          SizedBox(
+            width: double.infinity,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: () => context.go('/login'),
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.logout, size: 18),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Changer rôle',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: AppColors.violet,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                DropdownMenuItem(
-                  value: DashboardView.medecin,
-                  child: Text('Médecin'),
-                ),
-                DropdownMenuItem(value: DashboardView.drh, child: Text('DRH')),
-              ],
-              onChanged: (newValue) {
-                if (newValue == null) {
-                  return;
-                }
-                switch (newValue) {
-                  case DashboardView.employe:
-                    context.go('/home');
-                  case DashboardView.medecin:
-                    context.go('/doctor');
-                  case DashboardView.drh:
-                    context.go('/hr');
-                }
-              },
+              ),
             ),
           ),
           const Spacer(),
