@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/providers/generated_analysis_provider.dart';
 import '../../../core/theme/app_colors.dart';
 import 'widgets/prototype_camera_preview.dart';
 
-class CheckinScreen extends StatefulWidget {
+class CheckinScreen extends ConsumerStatefulWidget {
   const CheckinScreen({super.key});
 
   @override
-  State<CheckinScreen> createState() => _CheckinScreenState();
+  ConsumerState<CheckinScreen> createState() => _CheckinScreenState();
 }
 
-class _CheckinScreenState extends State<CheckinScreen> {
+class _CheckinScreenState extends ConsumerState<CheckinScreen> {
   int _currentStep = 0;
   bool _cameraEnabled = false;
   bool _isAnalyzing = false;
@@ -31,6 +33,10 @@ class _CheckinScreenState extends State<CheckinScreen> {
       if (!mounted) {
         return;
       }
+
+      // Generate dynamic analysis results
+      ref.read(generatedAnalysisProvider.notifier).generateNewAnalysis();
+
       setState(() {
         _isAnalyzing = false;
         _currentStep = 3;
@@ -45,6 +51,7 @@ class _CheckinScreenState extends State<CheckinScreen> {
       return;
     }
 
+    // After step 3, navigate to results with generated analysis
     context.go('/results');
   }
 

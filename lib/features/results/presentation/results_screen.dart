@@ -1,25 +1,37 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../core/mock/mock_data.dart';
+import '../../../core/providers/generated_analysis_provider.dart';
 import '../../../core/theme/app_colors.dart';
 
-class ResultsScreen extends StatefulWidget {
+class ResultsScreen extends ConsumerStatefulWidget {
   const ResultsScreen({super.key});
 
   @override
-  State<ResultsScreen> createState() => _ResultsScreenState();
+  ConsumerState<ResultsScreen> createState() => _ResultsScreenState();
 }
 
-class _ResultsScreenState extends State<ResultsScreen> {
+class _ResultsScreenState extends ConsumerState<ResultsScreen> {
   bool _shareWithDoctor = false;
 
   @override
   Widget build(BuildContext context) {
-    final score = mockUser['score_ce_mois'] as int;
-    final zone = mockUser['zone'] as String;
+    final generatedAnalysis = ref.watch(generatedAnalysisProvider);
+
+    // Use generated analysis if available, otherwise fallback to mock data
+    final score =
+        generatedAnalysis?.score ?? (mockUser['score_ce_mois'] as int);
+    final zone = generatedAnalysis?.zone ?? (mockUser['zone'] as String);
+    final aiResponse = generatedAnalysis?.aiResponse ?? mockAIResponse;
+    final recommendations =
+        generatedAnalysis?.recommendations ??
+        mockRecommandations.cast<String>();
+    final dimensions =
+        generatedAnalysis?.dimensions ?? mockDimensions.cast<String, int>();
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
@@ -51,8 +63,8 @@ class _ResultsScreenState extends State<ResultsScreen> {
                 ),
               ).animate().fadeIn().slideY(begin: 0.08, end: 0),
               const SizedBox(height: 16),
-              const _MainCard(
-                child: _RadarSection(),
+              _MainCard(
+                child: _RadarSection(dimensions: dimensions),
               ).animate(delay: 120.ms).fadeIn().slideY(begin: 0.08, end: 0),
               const SizedBox(height: 16),
               _MainCard(
@@ -69,7 +81,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       const Text('🧠 '),
                       Expanded(
                         child: Text(
-                          mockAIResponse,
+                          aiResponse,
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                       ),
@@ -87,7 +99,7 @@ class _ResultsScreenState extends State<ResultsScreen> {
                       style: Theme.of(context).textTheme.headlineMedium,
                     ),
                     const SizedBox(height: 14),
-                    ...mockRecommandations.map(
+                    ...recommendations.map(
                       (item) => Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: Container(
@@ -225,15 +237,17 @@ class _AnimatedScore extends StatelessWidget {
 }
 
 class _RadarSection extends StatelessWidget {
-  const _RadarSection();
+  const _RadarSection({required this.dimensions});
+
+  final Map<String, int> dimensions;
 
   @override
   Widget build(BuildContext context) {
     final entries = [
-      RadarEntry(value: (mockDimensions['vocal'] as int).toDouble()),
-      RadarEntry(value: (mockDimensions['facial'] as int).toDouble()),
-      RadarEntry(value: (mockDimensions['calendrier'] as int).toDouble()),
-      RadarEntry(value: (mockDimensions['tendance'] as int).toDouble()),
+      RadarEntry(value: (dimensions['vocal'] as int).toDouble()),
+      RadarEntry(value: (dimensions['facial'] as int).toDouble()),
+      RadarEntry(value: (dimensions['calendrier'] as int).toDouble()),
+      RadarEntry(value: (dimensions['tendance'] as int).toDouble()),
     ];
 
     return Column(
@@ -270,13 +284,21 @@ class _RadarSection extends StatelessWidget {
               getTitle: (index, angle) {
                 switch (index) {
                   case 0:
-                    return const RadarChartTitle(text: 'Vocal (58)');
+                    return RadarChartTitle(
+                      text: 'Vocal (${dimensions['vocal']})',
+                    );
                   case 1:
-                    return const RadarChartTitle(text: 'Facial (65)');
+                    return RadarChartTitle(
+                      text: 'Facial (${dimensions['facial']})',
+                    );
                   case 2:
-                    return const RadarChartTitle(text: 'Calen (55)');
+                    return RadarChartTitle(
+                      text: 'Calen (${dimensions['calendrier']})',
+                    );
                   case 3:
-                    return const RadarChartTitle(text: 'Tend (70)');
+                    return RadarChartTitle(
+                      text: 'Tend (${dimensions['tendance']})',
+                    );
                   default:
                     return const RadarChartTitle(text: '');
                 }
