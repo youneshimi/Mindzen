@@ -329,10 +329,7 @@ class _StepOneContent extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                AspectRatio(
-                  aspectRatio: 16 / 10,
-                  child: const PrototypeCameraPreview(),
-                ),
+                _CameraPreviewResponsive(),
               ],
             ),
           )
@@ -703,6 +700,35 @@ class _LiveDot extends StatelessWidget {
         .animate(onPlay: (controller) => controller.repeat(reverse: true))
         .fade(begin: 0.35, end: 1, duration: 800.ms)
         .scale(begin: const Offset(0.85, 0.85), end: const Offset(1.15, 1.15));
+  }
+}
+
+class _CameraPreviewResponsive extends StatelessWidget {
+  const _CameraPreviewResponsive();
+
+  @override
+  Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final screenHeight = screenSize.height;
+
+    // Calculate responsive max height:
+    // - Compact: < 600px → 280px (small phone)
+    // - Normal: 600-900px → 380px (regular phone)
+    // - Large: > 900px → 480px (tablet/large screen)
+
+    double maxPreviewHeight;
+    if (screenHeight < 600) {
+      maxPreviewHeight = 280;
+    } else if (screenHeight < 900) {
+      maxPreviewHeight = 380;
+    } else {
+      maxPreviewHeight = 480;
+    }
+
+    return ConstrainedBox(
+      constraints: BoxConstraints(maxHeight: maxPreviewHeight),
+      child: const PrototypeCameraPreview(),
+    );
   }
 }
 

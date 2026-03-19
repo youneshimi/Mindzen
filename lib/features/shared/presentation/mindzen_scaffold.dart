@@ -96,6 +96,23 @@ List<MindZenDestination> _destinationsForView(DashboardView view) {
   }
 }
 
+String _mobileDestinationLabel(MindZenDestination destination) {
+  switch (destination.path) {
+    case '/home':
+      return 'Accueil';
+    case '/checkin':
+      return 'Check-in';
+    case '/results':
+      return 'Resultats';
+    case '/history':
+      return 'Historique';
+    case '/settings':
+      return 'Reglages';
+    default:
+      return destination.label;
+  }
+}
+
 class _RoleVisual {
   const _RoleVisual({
     required this.accent,
@@ -218,23 +235,96 @@ class MindZenScaffold extends StatelessWidget {
             ),
           ),
           bottomNavigationBar: _isEmployeeLocation
-              ? NavigationBar(
-                  height: 70,
-                  indicatorColor: visual.accentLight,
-                  selectedIndex: employeeDestinations.indexWhere(
-                    (item) => item.path == location,
-                  ),
-                  destinations: employeeDestinations
-                      .map(
-                        (item) => NavigationDestination(
-                          icon: Icon(item.icon),
-                          label: item.label,
+              ? SafeArea(
+                  top: false,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: AppColors.cards.withValues(alpha: 0.96),
+                        borderRadius: BorderRadius.circular(22),
+                        border: Border.all(
+                          color: visual.accent.withValues(alpha: 0.16),
                         ),
-                      )
-                      .toList(),
-                  onDestinationSelected: (index) {
-                    context.go(employeeDestinations[index].path);
-                  },
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.08),
+                            blurRadius: 18,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(22),
+                        child: NavigationBarTheme(
+                          data: NavigationBarThemeData(
+                            backgroundColor: Colors.transparent,
+                            surfaceTintColor: Colors.transparent,
+                            elevation: 0,
+                            height: 66,
+                            indicatorColor: visual.accent.withValues(
+                              alpha: 0.16,
+                            ),
+                            indicatorShape: const StadiumBorder(),
+                            iconTheme: WidgetStateProperty.resolveWith((
+                              states,
+                            ) {
+                              final selected = states.contains(
+                                WidgetState.selected,
+                              );
+                              return IconThemeData(
+                                size: 21,
+                                color: selected
+                                    ? visual.accent
+                                    : AppColors.textSecondary.withValues(
+                                        alpha: 0.72,
+                                      ),
+                              );
+                            }),
+                            labelTextStyle: WidgetStateProperty.resolveWith((
+                              states,
+                            ) {
+                              final selected = states.contains(
+                                WidgetState.selected,
+                              );
+                              return GoogleFonts.inter(
+                                fontSize: 11,
+                                height: 1.1,
+                                fontWeight: selected
+                                    ? FontWeight.w600
+                                    : FontWeight.w500,
+                                letterSpacing: 0.15,
+                                color: selected
+                                    ? visual.accent
+                                    : AppColors.textSecondary.withValues(
+                                        alpha: 0.74,
+                                      ),
+                              );
+                            }),
+                          ),
+                          child: NavigationBar(
+                            labelBehavior:
+                                NavigationDestinationLabelBehavior.alwaysShow,
+                            selectedIndex: employeeDestinations.indexWhere(
+                              (item) => item.path == location,
+                            ),
+                            destinations: employeeDestinations
+                                .map(
+                                  (item) => NavigationDestination(
+                                    icon: Icon(item.icon),
+                                    selectedIcon: Icon(item.icon),
+                                    label: _mobileDestinationLabel(item),
+                                  ),
+                                )
+                                .toList(),
+                            onDestinationSelected: (index) {
+                              context.go(employeeDestinations[index].path);
+                            },
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 )
               : null,
         );
