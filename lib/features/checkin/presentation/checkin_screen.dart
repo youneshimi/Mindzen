@@ -3,6 +3,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/theme/app_colors.dart';
+import 'widgets/prototype_camera_preview.dart';
 
 class CheckinScreen extends StatefulWidget {
   const CheckinScreen({super.key});
@@ -295,7 +296,7 @@ class _StepOneContent extends StatelessWidget {
         const SizedBox(height: 14),
         if (cameraEnabled)
           Container(
-            width: 420,
+            width: 560,
             constraints: const BoxConstraints(maxWidth: double.infinity),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
@@ -321,21 +322,37 @@ class _StepOneContent extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
+                const PrototypeCameraPreview(),
+                const SizedBox(height: 12),
                 Container(
-                  height: 160,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE5E3DB),
-                    borderRadius: BorderRadius.circular(10),
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 10,
                   ),
-                  child: const Center(
-                    child: Icon(
-                      Icons.account_circle_outlined,
-                      size: 74,
-                      color: AppColors.textSecondary,
-                    ),
+                  decoration: BoxDecoration(
+                    color: AppColors.cards,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: AppColors.border),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.auto_awesome,
+                        size: 16,
+                        color: AppColors.violet,
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Mode prototype: superposition visuelle statique (contour visage, yeux, bouche).',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 Text(
                   'Compte à rebours : 0:28',
                   style: Theme.of(
@@ -347,7 +364,7 @@ class _StepOneContent extends StatelessWidget {
           )
         else
           Container(
-            width: 420,
+            width: 560,
             constraints: const BoxConstraints(maxWidth: double.infinity),
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(

@@ -210,8 +210,8 @@ class MindZenScaffold extends StatelessWidget {
                   child: _RoleContentFrame(
                     view: _view,
                     visual: visual,
-                    child: child,
                     compact: true,
+                    child: child,
                   ),
                 ),
               ],
@@ -291,39 +291,48 @@ class _RoleBanner extends StatelessWidget {
   final DashboardView view;
   final _RoleVisual visual;
 
+  Widget _modeChip(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: visual.accentLight,
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Text(
+        'Mode ${_viewLabel(view)}',
+        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+          color: visual.accent,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      decoration: BoxDecoration(
-        color: AppColors.cards,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: visual.accent.withValues(alpha: 0.30)),
-      ),
-      child: Wrap(
-        alignment: WrapAlignment.spaceBetween,
-        crossAxisAlignment: WrapCrossAlignment.center,
-        runSpacing: 10,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                width: 38,
-                height: 38,
-                decoration: BoxDecoration(
-                  color: visual.accentLight,
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(visual.icon, size: 20, color: visual.accent),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 820;
+        final roleIdentity = Row(
+          children: [
+            Container(
+              width: 38,
+              height: 38,
+              decoration: BoxDecoration(
+                color: visual.accentLight,
+                shape: BoxShape.circle,
               ),
-              const SizedBox(width: 10),
-              Column(
+              child: Icon(visual.icon, size: 20, color: visual.accent),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     visual.title,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       color: visual.accent,
                       fontWeight: FontWeight.w700,
@@ -331,28 +340,42 @@ class _RoleBanner extends StatelessWidget {
                   ),
                   Text(
                     visual.subtitle,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: Theme.of(context).textTheme.bodySmall,
                   ),
                 ],
               ),
-            ],
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-            decoration: BoxDecoration(
-              color: visual.accentLight,
-              borderRadius: BorderRadius.circular(999),
             ),
-            child: Text(
-              'Mode ${_viewLabel(view)}',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: visual.accent,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
+          ],
+        );
+
+        return Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: AppColors.cards,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: visual.accent.withValues(alpha: 0.30)),
           ),
-        ],
-      ),
+          child: compact
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    roleIdentity,
+                    const SizedBox(height: 10),
+                    _modeChip(context),
+                  ],
+                )
+              : Row(
+                  children: [
+                    Expanded(child: roleIdentity),
+                    const SizedBox(width: 12),
+                    _modeChip(context),
+                  ],
+                ),
+        );
+      },
     );
   }
 }
