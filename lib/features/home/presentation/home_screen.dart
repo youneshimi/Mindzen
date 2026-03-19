@@ -54,10 +54,21 @@ class HomeScreen extends StatelessWidget {
                     .fadeIn(delay: 420.ms, duration: 400.ms)
                     .slideY(begin: 0.18, end: 0),
               if (surchargeScore > 75) const SizedBox(height: 16),
-              ElevatedButton.icon(
-                    onPressed: () => context.go('/checkin'),
-                    icon: const Icon(Icons.self_improvement),
-                    label: const Text('Mon Moment MindZen 🧘'),
+              Wrap(
+                    spacing: 12,
+                    runSpacing: 12,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () => context.go('/checkin'),
+                        icon: const Icon(Icons.self_improvement),
+                        label: const Text('Mon Moment MindZen'),
+                      ),
+                      OutlinedButton.icon(
+                        onPressed: () => context.go('/results'),
+                        icon: const Icon(Icons.pie_chart_outline),
+                        label: const Text('Voir mes resultats'),
+                      ),
+                    ],
                   )
                   .animate()
                   .fadeIn(delay: 520.ms, duration: 400.ms)
@@ -87,17 +98,34 @@ class _Header extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.border),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        crossAxisAlignment: WrapCrossAlignment.center,
+        runSpacing: 12,
         children: [
-          Expanded(
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 680),
             child: Text(
-              'Bonjour $firstName 👋',
-              style: Theme.of(context).textTheme.headlineLarge,
+              'Bonjour $firstName\nVotre equilibre de janvier est pret.',
+              style: Theme.of(
+                context,
+              ).textTheme.headlineLarge?.copyWith(height: 1.15),
             ),
           ),
-          const SizedBox(width: 12),
-          Text(dateText, style: Theme.of(context).textTheme.bodyMedium),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.background,
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(color: AppColors.border),
+            ),
+            child: Text(
+              dateText,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(fontWeight: FontWeight.w700),
+            ),
+          ),
         ],
       ),
     );

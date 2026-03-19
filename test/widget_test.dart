@@ -9,10 +9,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // Login page should be shown first
-    expect(find.textContaining('Sélectionnez votre rôle'), findsOneWidget);
+    expect(find.textContaining('Selectionnez votre role'), findsOneWidget);
 
     // Tap on Employé button
-    await tester.tap(find.textContaining('Employé'));
+    await tester.tap(find.textContaining('Employe'));
     await tester.pumpAndSettle();
 
     // Home page should now be visible

@@ -13,105 +13,170 @@ class LoginScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 600),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 24.0,
-                  vertical: 40.0,
-                ),
-                child: Column(
-                  children: [
-                    // Logo / Title
-                    Text(
-                      'MindZen',
-                      style: GoogleFonts.dmSerifDisplay(
-                        fontSize: 48,
-                        fontStyle: FontStyle.italic,
-                        color: AppColors.violet,
-                        fontWeight: FontWeight.w400,
+      body: Stack(
+        children: [
+          Positioned(
+            top: -120,
+            left: -80,
+            child: _GlowCircle(
+              size: 300,
+              color: AppColors.violet.withValues(alpha: 0.14),
+            ),
+          ),
+          Positioned(
+            bottom: -110,
+            right: -70,
+            child: _GlowCircle(
+              size: 260,
+              color: AppColors.stableGreen.withValues(alpha: 0.12),
+            ),
+          ),
+          SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 680),
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 8,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.cards,
+                          borderRadius: BorderRadius.circular(999),
+                          border: Border.all(color: AppColors.border),
+                        ),
+                        child: Text(
+                          'Prototype interactif',
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.w700,
+                                color: AppColors.violet,
+                              ),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    Text(
-                      'Plateforme de bien-être en entreprise',
-                      style: GoogleFonts.dmSans(
-                        fontSize: 16,
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w400,
+                      const SizedBox(height: 22),
+                      Text(
+                        'MindZen',
+                        style: GoogleFonts.dmSerifDisplay(
+                          fontSize: 56,
+                          fontStyle: FontStyle.italic,
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.w400,
+                          height: 0.95,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 60),
-
-                    // Instructions
-                    Text(
-                      'Sélectionnez votre rôle',
-                      style: GoogleFonts.dmSerifDisplay(
-                        fontSize: 32,
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w400,
+                      const SizedBox(height: 8),
+                      Text(
+                        'Plateforme de bien-etre en entreprise',
+                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 40),
-
-                    // Employee Button
-                    _RoleButton(
-                      title: 'Employé',
-                      description: 'Accédez à votre bien-être',
-                      icon: Icons.person,
-                      onPressed: () async {
-                        ref.read(currentRoleProvider.notifier).state =
-                            UserRole.employe;
-                        if (context.mounted) context.go('/home');
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Doctor Button
-                    _RoleButton(
-                      title: 'Médecin',
-                      description: 'Suivez vos équipes',
-                      icon: Icons.local_hospital,
-                      onPressed: () async {
-                        ref.read(currentRoleProvider.notifier).state =
-                            UserRole.medecin;
-                        if (context.mounted) context.go('/doctor');
-                      },
-                    ),
-                    const SizedBox(height: 16),
-
-                    // HR Button
-                    _RoleButton(
-                      title: 'Responsable RH',
-                      description: 'Pilotez le bien-être global',
-                      icon: Icons.badge,
-                      onPressed: () async {
-                        ref.read(currentRoleProvider.notifier).state =
-                            UserRole.drh;
-                        if (context.mounted) context.go('/hr');
-                      },
-                    ),
-                    const SizedBox(height: 60),
-
-                    // Footer
-                    Text(
-                      '© 2026 MindZen — Prototype Confidential',
-                      style: GoogleFonts.dmSans(
-                        fontSize: 12,
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w400,
+                      const SizedBox(height: 24),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(22),
+                        decoration: BoxDecoration(
+                          color: AppColors.cards,
+                          borderRadius: BorderRadius.circular(22),
+                          border: Border.all(color: AppColors.border),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.06),
+                              blurRadius: 18,
+                              offset: Offset(0, 6),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Selectionnez votre role',
+                              style: Theme.of(context).textTheme.headlineMedium,
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              'Choisissez votre espace pour continuer.',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            ),
+                            const SizedBox(height: 18),
+                            _RoleButton(
+                              title: 'Employe',
+                              description:
+                                  'Accedez a votre bien-etre personnel',
+                              icon: Icons.person,
+                              accent: AppColors.violet,
+                              onPressed: () async {
+                                ref.read(currentRoleProvider.notifier).state =
+                                    UserRole.employe;
+                                if (context.mounted) context.go('/home');
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            _RoleButton(
+                              title: 'Medecin',
+                              description:
+                                  'Suivez les signaux collectifs equipes',
+                              icon: Icons.local_hospital,
+                              accent: AppColors.stableGreen,
+                              onPressed: () async {
+                                ref.read(currentRoleProvider.notifier).state =
+                                    UserRole.medecin;
+                                if (context.mounted) context.go('/doctor');
+                              },
+                            ),
+                            const SizedBox(height: 12),
+                            _RoleButton(
+                              title: 'Responsable RH',
+                              description:
+                                  'Pilotez les indicateurs organisation',
+                              icon: Icons.badge,
+                              accent: AppColors.riskOrange,
+                              onPressed: () async {
+                                ref.read(currentRoleProvider.notifier).state =
+                                    UserRole.drh;
+                                if (context.mounted) context.go('/hr');
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      const SizedBox(height: 18),
+                      Text(
+                        '2026 MindZen · Prototype confidentiel',
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
           ),
-        ),
+        ],
+      ),
+    );
+  }
+}
+
+class _GlowCircle extends StatelessWidget {
+  const _GlowCircle({required this.size, required this.color});
+
+  final double size;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return IgnorePointer(
+      child: Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
       ),
     );
   }
@@ -122,12 +187,14 @@ class _RoleButton extends StatelessWidget {
     required this.title,
     required this.description,
     required this.icon,
+    required this.accent,
     required this.onPressed,
   });
 
   final String title;
   final String description;
   final IconData icon;
+  final Color accent;
   final VoidCallback onPressed;
 
   @override
@@ -138,20 +205,28 @@ class _RoleButton extends StatelessWidget {
         onTap: onPressed,
         borderRadius: BorderRadius.circular(12),
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             border: Border.all(
-              color: AppColors.violet.withValues(alpha: 0.3),
-              width: 2,
+              color: accent.withValues(alpha: 0.24),
+              width: 1.5,
             ),
             borderRadius: BorderRadius.circular(12),
-            color: AppColors.violetLight.withValues(alpha: 0.5),
+            color: Colors.white,
           ),
           child: Row(
             children: [
               // Role icon
-              Icon(icon, size: 34, color: AppColors.violet),
-              const SizedBox(width: 20),
+              Container(
+                width: 44,
+                height: 44,
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, size: 24, color: accent),
+              ),
+              const SizedBox(width: 14),
               // Text
               Expanded(
                 child: Column(
@@ -178,7 +253,15 @@ class _RoleButton extends StatelessWidget {
                 ),
               ),
               // Arrow
-              Icon(Icons.arrow_forward_ios, size: 20, color: AppColors.violet),
+              Container(
+                width: 32,
+                height: 32,
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.12),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(Icons.arrow_forward, size: 18, color: accent),
+              ),
             ],
           ),
         ),
