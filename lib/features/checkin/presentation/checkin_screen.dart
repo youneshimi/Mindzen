@@ -293,12 +293,11 @@ class _StepOneContent extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 12),
         if (cameraEnabled)
           Container(
-            width: 560,
-            constraints: const BoxConstraints(maxWidth: double.infinity),
-            padding: const EdgeInsets.all(16),
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: const Color(0xFFF0EFEB),
               borderRadius: BorderRadius.circular(12),
@@ -306,90 +305,65 @@ class _StepOneContent extends StatelessWidget {
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _LiveDot(),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Caméra active',
-                        style: Theme.of(context).textTheme.bodySmall,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 12),
-                const PrototypeCameraPreview(),
-                const SizedBox(height: 12),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.cards,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: AppColors.border),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.auto_awesome,
-                        size: 16,
-                        color: AppColors.violet,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Mode prototype: tracking facial dynamique simule en temps reel (contour visage, yeux, bouche).',
-                          style: Theme.of(context).textTheme.bodySmall,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Prévisualisation',
+                      style: Theme.of(context).textTheme.titleSmall,
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        _LiveDot(),
+                        const SizedBox(width: 6),
+                        Text(
+                          'Actif',
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(fontWeight: FontWeight.w500),
                         ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 10),
-                Text(
-                  'Compte à rebours : 0:28',
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.w600),
+                AspectRatio(
+                  aspectRatio: 16 / 10,
+                  child: const PrototypeCameraPreview(),
                 ),
               ],
             ),
           )
         else
           Container(
-            width: 560,
-            constraints: const BoxConstraints(maxWidth: double.infinity),
-            padding: const EdgeInsets.all(16),
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               color: AppColors.background,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(color: AppColors.border),
             ),
             child: Text(
-              'Active la caméra si tu veux enrichir le check-in avec des métriques faciales (simulation).',
-              style: Theme.of(context).textTheme.bodyMedium,
+              'Active la caméra pour voir l\'aperçu.',
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
-        const SizedBox(height: 14),
+        const SizedBox(height: 12),
         Container(
-          padding: const EdgeInsets.all(14),
+          width: double.infinity,
+          padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: AppColors.violetLight,
             borderRadius: BorderRadius.circular(12),
           ),
           child: Text(
             'Aucune image n\'est sauvegardée. Traitement local uniquement.',
-            style: Theme.of(context).textTheme.bodyLarge,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.4),
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
         Wrap(
           spacing: 12,
           runSpacing: 10,
